@@ -1,0 +1,85 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Hero Section -->
+  <div class="row align-items-center">
+    <div class="col-md-6 mb-4">
+      <h1 class="display-4 fw-bold text-success">🌾 Krishi AI-Mitra</h1>
+      <p class="lead">
+        {% trans "Empowering small and marginal farmers with AI-driven crop and soil health diagnosis, treatment, and personalized recommendations." %}
+      </p>
+      <a href="#diagnosis" class="btn btn-success btn-lg mt-3">
+        {% trans "🌱 Get Started Now" %}
+      </a>
+      <a href="https://drive.google.com/file/d/1ZWR6N51F7y_HQDBPU2sUlWTh6R8mtoiT/view?usp=sharing" target="_blank" class="btn btn-outline-success btn-lg mt-3 ms-3">
+        {% trans "▶️ Watch Demo" %}
+      </a>
+    </div>
+    <div class="col-md-6 text-center">
+      <img src="https://media.istockphoto.com/id/1330214199/photo/indian-farmer-busy-using-mobile-phone-while-sitting-in-between-the-crop-seedlings-inside.jpg?s=612x612&w=0&k=20&c=PmGOwjZlQdOhETmjVwBoT4thL3mJn3VfEm5q9doj4aU=" alt="Farmer" class="img-fluid rounded shadow-lg" style="max-height: 320px;">
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <hr class="my-5">
+  <h2 class="text-center fw-bold mb-4">{% trans "🌟 Key Features" %}</h2>
+  <div class="row text-center g-4">
+    <div class="col-md-2 col-6">
+      <div class="border rounded py-3 bg-light shadow-sm h-100">
+        <h3>🖼️</h3>
+        <p class="mb-0">{% trans "Image Diagnosis" %}</p>
+      </div>
+    </div>
+    <div class="col-md-2 col-6">
+      <div class="border rounded py-3 bg-light shadow-sm h-100">
+        <h3>🧪</h3>
+        <p class="mb-0">{% trans "Fertilizer Advice" %}</p>
+      </div>
+    </div>
+    <div class="col-md-2 col-6">
+      <div class="border rounded py-3 bg-light shadow-sm h-100">
+        <h3>🌐</h3>
+        <p class="mb-0">{% trans "Multilingual" %}</p>
+      </div>
+    </div>
+    <div class="col-md-2 col-6">
+      <div class="border rounded py-3 bg-light shadow-sm h-100">
+        <h3>🔊</h3>
+        <p class="mb-0">{% trans "Audio Output" %}</p>
+      </div>
+    </div>
+    <div class="col-md-2 col-6 mx-auto">
+      <div class="border rounded py-3 bg-light shadow-sm h-100">
+        <h3>📡</h3>
+        <p class="mb-0">{% trans "Sensor Ready" %}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Local Crops Section -->
+  <hr class="my-5">
+  <h2 class="text-center fw-bold mb-4">{% trans "📋 Local Crops Information (स्थानीय फसलें)" %}</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-success">
+        <tr>
+          <th>{% trans "Crop (फसल)" %}</th>
+          <th>{% trans "Region (क्षेत्र)" %}</th>
+          <th>{% trans "Soil Type (मिट्टी)" %}</th>
+          <th>{% trans "Season (ऋतु)" %}</th>
+          <th>{% trans "Fertilizer (उर्वरक)" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Wheat (गेहूं)</td><td>Madhya Pradesh</td><td>Alluvial</td><td>Rabi</td><td>NPK 20:20</td></tr>
+        <tr><td>Rice (धान)</td><td>West Bengal</td><td>Clay Loam</td><td>Kharif</td><td>Urea + DAP</td></tr>
+        <tr><td>Soybean (सोयाबीन)</td><td>Maharashtra</td><td>Black Soil</td><td>Kharif</td><td>NPK 12:32:16</td></tr>
+        <tr><td>Mustard (सरसों)</td><td>Haryana</td><td>Loamy</td><td>Rabi</td><td>NPK 15:15:15</td></tr>
+        <tr><td>Cotton (कपास)</td><td>Gujarat</td><td>Black Soil</td><td>Kharif</td><td>NPK 6:12:36 + Mg</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

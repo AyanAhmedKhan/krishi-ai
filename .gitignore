@@ -1,0 +1,7 @@
+venv/ 
+*.keras 
+*.pyd 
+*.dll 
+__pycache__/ 
+*.h5 
+*.ckpt 

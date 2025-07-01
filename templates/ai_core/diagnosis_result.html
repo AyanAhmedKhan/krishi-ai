@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Diagnosis Result" %} - Krishi AI-Mitra{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h2>{% trans "Diagnosis Result" %}</h2>
+  <img src="{{ diagnosis.image.url }}" alt="Diagnosis Image" class="img-fluid my-3" style="max-height:300px;">
+  <h4 class="mt-3">{% trans "Prediction:" %} <span class="text-success">{{ diagnosis.result }}</span></h4>
+  {% if fertilizer_reco %}
+    <div class="alert alert-success mt-4" style="max-width:700px;margin:auto;">
+      <h5>🧪 {% trans "Fertilizer Recommendation" %}</h5>
+      <p class="mb-0">{{ fertilizer_reco }}</p>
+    </div>
+  {% endif %}
+  {% if diagnosis.gemini_response_en %}
+    <div class="alert alert-info mt-4 text-start" style="max-width:700px;margin:auto;">
+      <h5>{% trans "Recommendations from AI (English):" %}</h5>
+      <p>{{ diagnosis.gemini_response_en|linebreaks }}</p>
+    </div>
+  {% endif %}
+  {% if diagnosis.gemini_response_hi %}
+    <div class="alert alert-info mt-4 text-start" style="max-width:700px;margin:auto;">
+      <h5>{% trans "Recommendations from AI (Hindi):" %}</h5>
+      <p>{{ diagnosis.gemini_response_hi|linebreaks }}</p>
+    </div>
+  {% endif %}
+  {% if diagnosis.audio_hi %}
+    <div class="mt-3">
+      <h5>{% trans "सुनें हिंदी में:" %}</h5>
+      <audio controls src="{{ diagnosis.audio_hi.url }}"></audio>
+    </div>
+  {% endif %}
+ 
+  {% if not diagnosis.gemini_response_en and not diagnosis.gemini_response_hi %}
+    <div class="alert alert-warning mt-4">{% trans "Fetching recommendations... Please wait and refresh if needed." %}</div>
+  {% endif %}
+</div>
+{% endblock %} 

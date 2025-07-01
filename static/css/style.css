@@ -1,0 +1,14 @@
+body {
+    background: #f8fafc;
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.display-4 {
+    color: #388e3c;
+}
+.btn-success {
+    background-color: #388e3c;
+    border: none;
+} 

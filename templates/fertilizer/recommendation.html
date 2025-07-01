@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Fertilizer Recommendation" %} - Krishi AI-Mitra{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card shadow">
+        <div class="card-header bg-success text-white">
+          <h3 class="mb-0">
+            <i class="fas fa-magic me-2"></i>{% trans "Get Fertilizer Recommendation" %}
+          </h3>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.crop.id_for_label }}" class="form-label">
+                  <i class="fas fa-seedling me-2"></i>{% trans "Crop Type" %}
+                </label>
+                {{ form.crop }}
+                {% if form.crop.errors %}
+                  <div class="text-danger small">{{ form.crop.errors.0 }}</div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.soil_type.id_for_label }}" class="form-label">
+                  <i class="fas fa-layer-group me-2"></i>{% trans "Soil Type" %}
+                </label>
+                {{ form.soil_type }}
+                {% if form.soil_type.errors %}
+                  <div class="text-danger small">{{ form.soil_type.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.region.id_for_label }}" class="form-label">
+                  <i class="fas fa-map-marker-alt me-2"></i>{% trans "Region" %}
+                </label>
+                {{ form.region }}
+                {% if form.region.errors %}
+                  <div class="text-danger small">{{ form.region.errors.0 }}</div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.area_hectares.id_for_label }}" class="form-label">
+                  <i class="fas fa-ruler-combined me-2"></i>{% trans "Area (Hectares)" %}
+                </label>
+                {{ form.area_hectares }}
+                {% if form.area_hectares.errors %}
+                  <div class="text-danger small">{{ form.area_hectares.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="{% url 'fertilizer' %}" class="btn btn-outline-secondary me-md-2">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Back" %}
+              </a>
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-magic me-2"></i>{% trans "Get Recommendation" %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <div class="mt-4">
+        <div class="alert alert-info">
+          <h6><i class="fas fa-info-circle me-2"></i>{% trans "What you'll get:" %}</h6>
+          <ul class="mb-0">
+            <li>{% trans "Recommended fertilizers with NPK ratios" %}</li>
+            <li>{% trans "Application rates per hectare" %}</li>
+            <li>{% trans "Optimal application timing" %}</li>
+            <li>{% trans "Organic alternatives" %}</li>
+            <li>{% trans "Cost estimates" %}</li>
+            <li>{% trans "Region-specific considerations" %}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

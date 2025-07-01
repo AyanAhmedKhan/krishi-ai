@@ -1,0 +1,222 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Admin Analytics Dashboard" %} - Krishi AI-Mitra{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4">{% trans "Admin Analytics Dashboard" %}</h2>
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{% trans "Total Users" %}</h5>
+          <p class="display-6">{{ total_users }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{% trans "Total Diagnoses" %}</h5>
+          <p class="display-6">{{ total_diagnoses }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">{% trans "Total Sensor Entries" %}</h5>
+          <p class="display-6">{{ total_sensor }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <h5>{% trans "Most Common Diseases (Bar Chart)" %}</h5>
+      <div id="barChartContainer">
+        <canvas id="barChart"></canvas>
+        <div id="barChartNoData" class="text-center text-muted" style="display: none;">
+          <p>{% trans "No disease data available" %}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h5>{% trans "Diagnoses Per Day (Line Chart)" %}</h5>
+      <div id="lineChartContainer">
+        <canvas id="lineChart"></canvas>
+        <div id="lineChartNoData" class="text-center text-muted" style="display: none;">
+          <p>{% trans "No diagnosis data available" %}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6 offset-md-3">
+      <h5>{% trans "User Role Distribution (Pie Chart)" %}</h5>
+      <div id="pieChartContainer">
+        <canvas id="pieChart"></canvas>
+        <div id="pieChartNoData" class="text-center text-muted" style="display: none;">
+          <p>{% trans "No user role data available" %}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h4 class="mt-5">{% trans "Most Common Diseases (Table)" %}</h4>
+  <table class="table table-bordered mt-3" style="max-width:500px;margin:auto;">
+    <thead>
+      <tr><th>{% trans "Disease" %}</th><th>{% trans "Count" %}</th></tr>
+    </thead>
+    <tbody>
+      {% for disease, count in top_diseases %}
+        <tr><td>{{ disease }}</td><td>{{ count }}</td></tr>
+      {% empty %}
+        <tr><td colspan="2">{% trans "No data available." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Load Chart.js with fallback -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+<script>
+// Check if Chart.js loaded successfully
+if (typeof Chart === 'undefined') {
+    console.error('Chart.js failed to load');
+    document.querySelectorAll('canvas').forEach(canvas => {
+        canvas.style.display = 'none';
+        const noDataDiv = canvas.parentElement.querySelector('[id$="NoData"]');
+        if (noDataDiv) noDataDiv.style.display = 'block';
+    });
+} else {
+    console.log('Chart.js loaded successfully');
+    
+    // Parse data with error handling
+    let barLabels = [];
+    let barData = [];
+    let lineLabels = [];
+    let lineData = [];
+    let pieLabels = [];
+    let pieData = [];
+    
+    try {
+        barLabels = {{ bar_labels|safe }};
+        barData = {{ bar_data|safe }};
+        lineLabels = {{ line_labels|safe }};
+        lineData = {{ line_data|safe }};
+        pieLabels = {{ pie_labels|safe }};
+        pieData = {{ pie_data|safe }};
+    } catch (e) {
+        console.error('Error parsing chart data:', e);
+    }
+    
+    // Create charts only if data exists
+    if (barLabels.length > 0 && barData.length > 0) {
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: barLabels,
+                datasets: [{
+                    label: 'Cases',
+                    data: barData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    } else {
+        document.getElementById('barChart').style.display = 'none';
+        document.getElementById('barChartNoData').style.display = 'block';
+    }
+    
+    if (lineLabels.length > 0 && lineData.length > 0) {
+        new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: {
+                labels: lineLabels,
+                datasets: [{
+                    label: 'Diagnoses',
+                    data: lineData,
+                    fill: false,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    } else {
+        document.getElementById('lineChart').style.display = 'none';
+        document.getElementById('lineChartNoData').style.display = 'block';
+    }
+    
+    if (pieLabels.length > 0 && pieData.length > 0) {
+        new Chart(document.getElementById('pieChart'), {
+            type: 'pie',
+            data: {
+                labels: pieLabels,
+                datasets: [{
+                    data: pieData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    } else {
+        document.getElementById('pieChart').style.display = 'none';
+        document.getElementById('pieChartNoData').style.display = 'block';
+    }
+}
+</script>
+{% endblock %} 

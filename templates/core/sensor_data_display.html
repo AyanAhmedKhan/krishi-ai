@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Latest Sensor Data" %} - Krishi AI-Mitra{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h2>{% trans "Latest Sensor Data" %}</h2>
+  {% if latest_data %}
+    <table class="table table-bordered mt-4" style="max-width:400px;margin:auto;">
+      <tr><th>{% trans "Moisture" %}</th><td>{{ latest_data.moisture }}</td></tr>
+      <tr><th>{% trans "Temperature" %}</th><td>{{ latest_data.temperature }}</td></tr>
+      <tr><th>{% trans "pH" %}</th><td>{{ latest_data.ph }}</td></tr>
+      <tr><th>{% trans "Timestamp" %}</th><td>{{ latest_data.created_at }}</td></tr>
+    </table>
+  {% else %}
+    <div class="alert alert-warning mt-4">{% trans "No sensor data available yet." %}</div>
+  {% endif %}
+  <a href="{% url 'sensor_input' %}" class="btn btn-primary mt-3">{% trans "Enter New Data" %}</a>
+</div>
+{% endblock %} 

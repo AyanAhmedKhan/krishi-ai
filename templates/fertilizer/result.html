@@ -1,0 +1,128 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Fertilizer Recommendation Result" %} - Krishi AI-Mitra{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-4">
+        <h2 class="text-success">
+          <i class="fas fa-check-circle me-2"></i>{% trans "Your Fertilizer Recommendation" %}
+        </h2>
+        <p class="lead">{% trans "Based on your crop, soil type, and region" %}</p>
+      </div>
+      
+      <!-- Request Summary -->
+      <div class="card mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>{% trans "Request Details" %}</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <strong>{% trans "Crop:" %}</strong><br>
+              <span class="text-primary">{{ user_request.crop.name }}</span>
+            </div>
+            <div class="col-md-3">
+              <strong>{% trans "Soil Type:" %}</strong><br>
+              <span class="text-primary">{{ user_request.soil_type.name }}</span>
+            </div>
+            <div class="col-md-3">
+              <strong>{% trans "Region:" %}</strong><br>
+              <span class="text-primary">{{ user_request.region.name }}</span>
+            </div>
+            <div class="col-md-3">
+              <strong>{% trans "Area:" %}</strong><br>
+              <span class="text-primary">{{ user_request.area_hectares }} {% trans "hectares" %}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- AI Recommendation -->
+      <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-robot me-2"></i>{% trans "AI-Powered Recommendation" %}
+          </h5>
+        </div>
+        <div class="card-body">
+          {% if ai_recommendation %}
+            <div class="recommendation-content">
+              {{ ai_recommendation|linebreaks }}
+            </div>
+          {% else %}
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              {% trans "AI recommendation is currently unavailable. Please try again later." %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <!-- Database Recommendation (if available) -->
+      {% if recommendation %}
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-database me-2"></i>{% trans "Database Recommendation" %}
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>{% trans "Primary Fertilizer:" %}</h6>
+              <p class="mb-2">
+                <strong>{{ recommendation.primary_fertilizer.name }}</strong><br>
+                <small class="text-muted">NPK: {{ recommendation.primary_fertilizer.npk_ratio }}</small>
+              </p>
+              <p>{{ recommendation.primary_fertilizer.description }}</p>
+            </div>
+            {% if recommendation.secondary_fertilizer %}
+            <div class="col-md-6">
+              <h6>{% trans "Secondary Fertilizer:" %}</h6>
+              <p class="mb-2">
+                <strong>{{ recommendation.secondary_fertilizer.name }}</strong><br>
+                <small class="text-muted">NPK: {{ recommendation.secondary_fertilizer.npk_ratio }}</small>
+              </p>
+              <p>{{ recommendation.secondary_fertilizer.description }}</p>
+            </div>
+            {% endif %}
+          </div>
+          {% if recommendation.notes %}
+          <div class="mt-3">
+            <h6>{% trans "Additional Notes:" %}</h6>
+            <p class="mb-0">{{ recommendation.notes }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      
+      <!-- Action Buttons -->
+      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <a href="{% url 'fertilizer_recommendation' %}" class="btn btn-success me-md-2">
+          <i class="fas fa-plus me-2"></i>{% trans "New Recommendation" %}
+        </a>
+        <a href="{% url 'fertilizer_history' %}" class="btn btn-outline-primary me-md-2">
+          <i class="fas fa-history me-2"></i>{% trans "View History" %}
+        </a>
+        <a href="{% url 'fertilizer' %}" class="btn btn-outline-secondary">
+          <i class="fas fa-home me-2"></i>{% trans "Back to Home" %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.recommendation-content {
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+.recommendation-content p {
+  margin-bottom: 1rem;
+}
+</style>
+{% endblock %} 

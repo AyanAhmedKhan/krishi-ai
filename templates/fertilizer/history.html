@@ -1,0 +1,125 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Fertilizer History" %} - Krishi AI-Mitra{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+          <i class="fas fa-history me-2"></i>{% trans "Your Fertilizer Recommendations" %}
+        </h2>
+        <a href="{% url 'fertilizer_recommendation' %}" class="btn btn-success">
+          <i class="fas fa-plus me-2"></i>{% trans "New Recommendation" %}
+        </a>
+      </div>
+      
+      {% if user_requests %}
+        <div class="row">
+          {% for request in user_requests %}
+          <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                  <i class="fas fa-seedling me-2 text-success"></i>{{ request.crop.name }}
+                </h6>
+                <small class="text-muted">{{ request.created_at|date:"M d, Y" }}</small>
+              </div>
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div class="col-6">
+                    <small class="text-muted">{% trans "Soil Type" %}</small><br>
+                    <strong>{{ request.soil_type.name }}</strong>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">{% trans "Region" %}</small><br>
+                    <strong>{{ request.region.name }}</strong>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-6">
+                    <small class="text-muted">{% trans "Area" %}</small><br>
+                    <strong>{{ request.area_hectares }} {% trans "hectares" %}</strong>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted">{% trans "Status" %}</small><br>
+                    {% if request.recommendation %}
+                      <span class="badge bg-success">{% trans "Completed" %}</span>
+                    {% else %}
+                      <span class="badge bg-warning">{% trans "AI Only" %}</span>
+                    {% endif %}
+                  </div>
+                </div>
+                
+                {% if request.recommendation %}
+                <div class="mb-3">
+                  <small class="text-muted">{% trans "Primary Fertilizer" %}</small><br>
+                  <strong>{{ request.recommendation.primary_fertilizer.name }}</strong>
+                  <small class="text-muted">({{ request.recommendation.primary_fertilizer.npk_ratio }})</small>
+                </div>
+                {% endif %}
+                
+                <div class="d-grid">
+                  <a href="#" class="btn btn-outline-primary btn-sm" onclick="viewDetails({{ request.id }})">
+                    <i class="fas fa-eye me-1"></i>{% trans "View Details" %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if user_requests.has_other_pages %}
+        <nav aria-label="{% trans 'Fertilizer history pagination' %}">
+          <ul class="pagination justify-content-center">
+            {% if user_requests.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ user_requests.previous_page_number }}">{% trans "Previous" %}</a>
+              </li>
+            {% endif %}
+            
+            {% for num in user_requests.paginator.page_range %}
+              {% if user_requests.number == num %}
+                <li class="page-item active">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% elif num > user_requests.number|add:'-3' and num < user_requests.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            
+            {% if user_requests.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ user_requests.next_page_number }}">{% trans "Next" %}</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+        
+      {% else %}
+        <div class="text-center py-5">
+          <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+          <h4 class="text-muted">{% trans "No recommendations yet" %}</h4>
+          <p class="text-muted">{% trans "Get your first fertilizer recommendation to see it here." %}</p>
+          <a href="{% url 'fertilizer_recommendation' %}" class="btn btn-success">
+            <i class="fas fa-magic me-2"></i>{% trans "Get Your First Recommendation" %}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+function viewDetails(requestId) {
+  // This would typically redirect to a detailed view
+  // For now, we'll show an alert
+  alert('Detailed view for recommendation #' + requestId + ' would be shown here.');
+}
+</script>
+{% endblock %} 

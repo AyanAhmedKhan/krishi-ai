@@ -1,0 +1,11 @@
+django>=5.2,<6.0
+tensorflow>=2.15,<2.16
+keras>=3.0.0,<4.0.0
+numpy>=1.26,<2.0
+pillow
+h5py
+deep-translator
+gTTS
+requests
+groq
+pydantic
